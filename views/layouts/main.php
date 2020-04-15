@@ -27,10 +27,13 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <div class="container">
-        <?= Alert::widget() ?>
-        <?= $content ?>
+    <?= Alert::widget() ?>
+    <div class="jumbotron">
+        <h1>n64</h1>
+        <p class="lead">Simple steganography tool to hide ascii text in image.</p>
     </div>
+
+    <?= $content ?>
 </div>
 
 <footer class="footer">

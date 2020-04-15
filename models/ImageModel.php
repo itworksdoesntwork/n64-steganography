@@ -4,11 +4,11 @@ namespace app\models;
 
 use http\Exception\UnexpectedValueException;
 use yii\base\Model;
-use yii\web\UploadedFile;
 
 class ImageModel extends Model
 {
-    private static $imageExtension = '.png';
+    public static $imageExtension = '.png';
+
     public $imageQuality = 9; // png quality is in range 0..9, not like jpeg which is in range 0..100
     public $basePath = 'uploads/';
     public $imageName;
@@ -65,9 +65,8 @@ class ImageModel extends Model
         imagepng($bg, $newTempImageFilePath . static::$imageExtension, $this->imageQuality);
         imagedestroy($bg);
 
-        $md5Sum = md5_file($newTempImageFilePath . static::$imageExtension);
-        $newImageName = $md5Sum . static::$imageExtension;
-        rename($newTempImageFilePath . static::$imageExtension, $this->basePath . $newImageName);
+        $newImageName = md5_file($newTempImageFilePath . static::$imageExtension);
+        rename($newTempImageFilePath . static::$imageExtension, $this->basePath . $newImageName . static::$imageExtension);
         unlink($imageFilePath); // delete old temp image file
         $this->imageName = $newImageName;
         $this->createThumbnail();
@@ -77,13 +76,13 @@ class ImageModel extends Model
     {
         $new_width = 150;
         $new_height = 150;
-        list($old_width, $old_height) = getimagesize($this->basePath . $this->imageName);
+        list($old_width, $old_height) = getimagesize($this->basePath . $this->imageName . static::$imageExtension);
 
         $new_image = imagecreatetruecolor($new_width, $new_height);
-        $old_image = imagecreatefrompng($this->basePath . $this->imageName);
+        $old_image = imagecreatefrompng($this->basePath . $this->imageName . static::$imageExtension);
 
         imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $new_width, $new_height, $old_width, $old_height);
 
-        imagepng($new_image, $this->basePath . md5($this->imageName) . '_thumbnail' . static::$imageExtension, $this->imageQuality);
+        imagepng($new_image, $this->basePath . $this->imageName . '_thumbnail' . static::$imageExtension, $this->imageQuality);
     }
 }

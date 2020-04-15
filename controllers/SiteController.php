@@ -52,10 +52,20 @@ class SiteController extends Controller
             $ImageUploadForm->upload()
         ) {
             // image uploaded successfully !!!
-            echo "Uploaded";
-            die();
+            return $this->redirect(['site/image', 'imageHash' => $ImageUploadForm->imageName]);
         }
 
         return $this->render('index', ['ImageUploadForm' => $ImageUploadForm]);
+    }
+
+    /**
+     * Displays image viewer.
+     *
+     * @param string $imageHash
+     * @return string
+     */
+    public function actionImage(string $imageHash)
+    {
+        return $this->render('image', ['imageHash' => $imageHash]);
     }
 }

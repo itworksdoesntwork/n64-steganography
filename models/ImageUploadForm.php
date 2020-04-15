@@ -2,13 +2,14 @@
 
 namespace app\models;
 
+use app\models\ImageModel;
 use yii\base\Model;
 use yii\web\UploadedFile;
-use app\models\ImageModel;
 
 class ImageUploadForm extends Model
 {
     public $image;
+    public $imageName;
 
     public function rules()
     {
@@ -17,9 +18,10 @@ class ImageUploadForm extends Model
                 'image', 'file',
                 'skipOnEmpty'   => false,
                 'extensions'    => 'bmp, png, jpg, jpeg',
-                'maxSize'       => 2 * 1024 * 1024,
+                'maxSize'       => 2 * 1024 * 1024, // 2 MB - 1024 bytes * 1024 = 1MB * 2 = 2MB
                 'tooBig'        => 'File size limit is 2MB' // err msg for failed file size validation
             ],
+            ['imageName', 'safe']
         ];
     }
 
@@ -34,12 +36,12 @@ class ImageUploadForm extends Model
     // bool(true) or exception
     public function upload()
     {
-        $this->image = UploadedFile::getInstance($this, 'image');
         $newImageName = md5($this->image->baseName . time() . rand());
         $this->image->saveAs('uploads/' . $newImageName . '.' . $this->image->extension);
 
         $imageModel = new ImageModel(['imageName' => $newImageName . '.' . $this->image->extension]);
         $imageModel->convertToPNG();
+        $this->imageName = $imageModel->imageName;
         return true;
     }
 }
