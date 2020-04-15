@@ -1,14 +1,29 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $imageHash String */
+/* @var $imageModel \app\models\ImageModel */
 
-use yii\helpers\Html;
+use yii\widgets\DetailView;
 
 $this->title = 'n64 - image detail';
 ?>
-<div class="row">
-    <div class="col-md-2 col-md-offset-5 text-center">
-        <?= Html::img("@web/uploads/{$imageHash}_thumbnail.png"); ?>
-    </div>
+<div class="col-md-4 col-md-offset-4 text-center">
+    <?= DetailView::widget([
+        'model' => $imageModel,
+        'attributes' => [
+            'thumbnail:image',
+            'imageName',
+            [
+                'attribute' => 'Width',
+                'value' => $imageModel->width . 'px',
+            ],
+            [
+                'attribute' => 'Height',
+                'value' => $imageModel->height . 'px',
+            ],
+            'uploadTime:dateTime',
+            'fileSize:shortSize',
+            'decode:text',
+        ]
+    ]) ?>
 </div>

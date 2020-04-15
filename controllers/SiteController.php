@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\ImageModel;
 use Yii;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\ImageUploadForm;
@@ -66,6 +68,12 @@ class SiteController extends Controller
      */
     public function actionImage(string $imageHash)
     {
-        return $this->render('image', ['imageHash' => $imageHash]);
+        $imageModel = new ImageModel(['imageName' => $imageHash]);
+
+        if (!$imageModel->validate()) {
+            throw new NotFoundHttpException('Image not exist');
+        }
+
+        return $this->render('image', ['imageModel' => $imageModel]);
     }
 }

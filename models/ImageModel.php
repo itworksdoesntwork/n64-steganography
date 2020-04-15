@@ -11,16 +11,30 @@ class ImageModel extends Model
 
     public $imageQuality = 9; // png quality is in range 0..9, not like jpeg which is in range 0..100
     public $basePath = 'uploads/';
+    public $imageThumbnailSuffix = '_thumbnail';
     public $imageName;
+    public $x = null;
+    public $y = null;
+    public $upload_time = null;
+    public $file_size = null;
 
     public function rules()
     {
         return [
-            ['imagePath', function ($attribute, $params) {
-                if (!file_exists($this->basePath . $this->$attribute)) {
+            ['imageName', function ($attribute, $params) {
+                if (!file_exists($this->basePath . $this->$attribute . static::$imageExtension)) {
                     $this->addError($attribute, 'Image does not exist!');
                 }
             }],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'thumbnail' => 'Image Preview',
+            'imageName' => 'MD5 Hash',
+            'decode'    => 'Hidden text'
         ];
     }
 
@@ -83,6 +97,81 @@ class ImageModel extends Model
 
         imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $new_width, $new_height, $old_width, $old_height);
 
-        imagepng($new_image, $this->basePath . $this->imageName . '_thumbnail' . static::$imageExtension, $this->imageQuality);
+        imagepng($new_image, $this->basePath . $this->imageName . $this->imageThumbnailSuffix . static::$imagExtension, $this->imageQuality);
+    }
+
+    public function getThumbnail()
+    {
+        $basePath = $this->basePath . $this->imageName;
+        $imagePath = $basePath . static::$imageExtension;
+        $thumbnailPath = $basePath . $this->imageThumbnailSuffix . static::$imageExtension;
+
+        if (!file_exists($imagePath)) {
+            $this->createThumbnail();
+        }
+
+        return $thumbnailPath;
+    }
+
+    public function getX()
+    {
+        if ($this->x === null) {
+            list($x, $y) = getimagesize($this->basePath . $this->imageName . static::$imageExtension);
+            $this->x = $x;
+            $this->y = $y;
+        }
+
+        return $this->x;
+    }
+
+    public function getY()
+    {
+        if ($this->y === null) {
+            list($x, $y) = getimagesize($this->basePath . $this->imageName . static::$imageExtension);
+            $this->x = $x;
+            $this->y = $y;
+        }
+
+        return $this->y;
+    }
+
+    public function getWidth()
+    {
+        return $this->getX();
+    }
+
+    public function getHeight()
+    {
+        return $this->getY();
+    }
+
+    public function getUploadTime()
+    {
+        if ($this->upload_time === null) {
+            $this->upload_time = filemtime($this->basePath . $this->imageName . static::$imageExtension);
+        }
+
+        return $this->upload_time;
+    }
+
+    public function getFileSize()
+    {
+        if ($this->file_size === null) {
+            $this->file_size = filesize($this->basePath . $this->imageName . static::$imageExtension);
+        }
+
+        return $this->file_size;
+    }
+
+    public function getDecode()
+    {
+        // TODO
+        return null;
+    }
+
+    public function setEncode()
+    {
+        // TODO
+        return null;
     }
 }
