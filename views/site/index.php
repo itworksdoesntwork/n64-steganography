@@ -15,7 +15,7 @@ $this->title = 'n64 - index';
         $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]);
 
         echo $form->field($ImageUploadForm, 'image')->fileInput()->label(false);
-        echo Html::submitButton('Submit', ['class' => 'btn btn-primary']);
+        echo Html::submitButton('Upload', ['class' => 'btn btn-primary']);
 
         ActiveForm::end();
         ?>
