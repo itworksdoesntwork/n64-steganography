@@ -32,9 +32,10 @@ class ImageModel extends Model
     public function attributeLabels()
     {
         return [
-            'thumbnail' => 'Image Preview',
-            'imageName' => 'MD5 Hash',
-            'decode'    => 'Hidden text'
+            'thumbnail'     => 'Image Preview',
+            'imageName'     => 'MD5 Hash',
+            'decode'        => 'Hidden text',
+            'hasHiddenText' => 'Has Hidden Text ?'
         ];
     }
 
@@ -166,12 +167,26 @@ class ImageModel extends Model
     public function getDecode()
     {
         // TODO
-        return null;
+
+        // mock
+        return time() % 2 ? null : \Yii::$app->security->generateRandomString(rand(10, 500));
     }
 
     public function setEncode()
     {
         // TODO
         return null;
+    }
+
+    public function getMaxTextToHide()
+    {
+        // TODO
+
+        return 500; // mock
+    }
+
+    public function getHasHiddenText()
+    {
+        return !!$this->getDecode();
     }
 }

@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $imageModel \app\models\ImageModel */
+/* @var $imageEncodeForm \app\models\ImageEncodeForm */
 
 use yii\widgets\DetailView;
 
@@ -15,15 +16,24 @@ $this->title = 'n64 - image detail';
             'imageName',
             [
                 'attribute' => 'Width',
-                'value' => $imageModel->width . 'px',
+                'value'     => $imageModel->width . 'px',
             ],
             [
                 'attribute' => 'Height',
-                'value' => $imageModel->height . 'px',
+                'value'     => $imageModel->height . 'px',
             ],
             'uploadTime:dateTime',
             'fileSize:shortSize',
-            'decode:text',
+            'hasHiddenText:boolean',
+            [
+                'label' => 'hide',
+                'value' => $imageModel->decode
+            ]
         ]
     ]) ?>
+
+    <?=  $this->render($imageModel->hasHiddenText ? 'decodeView' : 'encodeForm', [
+            'imageModel'        => $imageModel,
+            'imageEncodeForm'   => $imageEncodeForm,
+    ]); ?>
 </div>

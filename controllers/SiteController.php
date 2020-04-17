@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\ImageUploadForm;
+use app\models\ImageEncodeForm;
 
 class SiteController extends Controller
 {
@@ -74,6 +75,18 @@ class SiteController extends Controller
             throw new NotFoundHttpException('Image not exist');
         }
 
-        return $this->render('image', ['imageModel' => $imageModel]);
+        // load encode form only if we are sure the image exists
+        $imageEncodeForm = new ImageEncodeForm(['imageName' => $imageHash]);
+
+        if ($imageEncodeForm->load(Yii::$app->request->post()) && $imageEncodeForm->validate()) {
+            print_r($imageEncodeForm);
+            die();
+            //return $this->redirect(['site/image', 'imageHash' => $ImageUploadForm->imageName]);
+        }
+
+        return $this->render('image', [
+            'imageModel'        => $imageModel,
+            'imageEncodeForm'   => $imageEncodeForm,
+        ]);
     }
 }
