@@ -38,4 +38,9 @@ class ImageEncodeForm extends Model
 
         return $parentLoad && $this->validate();
     }
+
+    public function encode()
+    {
+        $this->_imageModel->encode = $this->textToEncode;
+    }
 }

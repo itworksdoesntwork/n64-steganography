@@ -79,6 +79,7 @@ class SiteController extends Controller
         $imageEncodeForm = new ImageEncodeForm(['imageName' => $imageHash]);
 
         if ($imageEncodeForm->load(Yii::$app->request->post()) && $imageEncodeForm->validate()) {
+            $imageEncodeForm->encode();
             print_r($imageEncodeForm);
             die();
             //return $this->redirect(['site/image', 'imageHash' => $ImageUploadForm->imageName]);

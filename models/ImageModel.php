@@ -169,12 +169,15 @@ class ImageModel extends Model
         // TODO
 
         // mock
-        return time() % 2 ? null : \Yii::$app->security->generateRandomString(rand(10, 500));
+        return time() % 2 ? null : \Yii::$app->security->generateRandomString(rand(10, 30));
     }
 
-    public function setEncode()
+    public function setEncode($encode)
     {
         // TODO
+
+        print_r($encode);
+        die();
         return null;
     }
 
